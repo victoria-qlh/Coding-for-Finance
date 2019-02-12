@@ -1,0 +1,86 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+void rotate_array(char **a, int size) {
+    char **new_array = new char* [size];
+    for (int i=0;i<size;i++){
+        new_array[i] = new char[size];
+    }
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            new_array[i][j] = a[i][j];
+        }
+    }
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            a[j][size - 1 - i] = new_array[i][j];
+        }
+    }
+    for(int i=0;i<size;i++){
+        delete[]new_array[i];
+    }
+    delete[]new_array;
+}
+
+int main() {
+    int size_treasure, size_map;
+    string input;
+    getline(cin, input);
+    size_treasure=stoi(input);
+    char **p = new char *[size_treasure];
+    for (int i = 0; i < size_treasure; i++) {
+        p[i] = new char[size_treasure];
+    }
+    for (int i = 0; i < size_treasure; i++) {
+        getline(cin, input);
+        for (int j = 0; j < size_treasure; j++) {
+            p[i][j] = input[j];
+        }
+    }
+    getline(cin, input);
+    size_map=stoi(input);
+    char **map = new char *[size_map];
+    for (int i = 0; i < size_map; i++) {
+        map[i] = new char[size_map];
+    }
+    for (int i = 0; i < size_map; i++) {
+        getline(cin, input);
+        for (int j = 0; j < size_map; j++) {
+            map[i][j] = input[j];
+        }
+    }
+
+    for (int i = 0; i <= (size_map - size_treasure); i++) {
+        for (int j = 0; j <= (size_map - size_treasure); j++) {
+            int n=0;
+            bool check=true;
+            while(n<4&&check){
+                for(int a=0;a<size_treasure;a++){
+                    for(int b=0;b<size_treasure;b++){
+                        check=check&&map[i+a][j+b]==p[a][b];
+                    }
+                }
+                if(! check){
+                    rotate_array(p, size_treasure);
+                    n++;
+                    check=true;
+                }
+                else{
+                    cout << j << " " << i <<endl;
+                    check=false;
+                }
+            }
+        }
+    }
+    for (int i = 0; i < size_map; i++) {
+        delete[]map[i];
+    }
+    for (int i = 0; i < size_treasure; i++) {
+        delete[]p[i];
+    }
+    delete[]map;
+    delete[]p;
+    return 0;
+}
